@@ -116,7 +116,7 @@ systemctl enable lxdm
 systemctl enable NetworkManager
 usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill alarm
 
-git clone https://github.com/SupreethaJayaram/Arch-Linux-Build
+git clone https://github.com/SupreethaJayaram/ArchLinux-Build
 cd ArchLinux-Build
 cd linux-pine64
 makepkg -Acs
