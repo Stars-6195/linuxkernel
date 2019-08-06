@@ -96,6 +96,7 @@ EOF
 cat > "$DEST/second-phase" <<EOF
 
 #!/bin/sh
+
 pacman-key --init
 pacman-key --populate archlinuxarm
 killall -KILL gpg-agent
@@ -107,7 +108,7 @@ pacman -S --noconfirm --needed dosfstools curl xz iw rfkill netctl dialog wpa_su
 
 
 # Install XFCE
-pacman -S --noconfirm git xfce4 xorg-server xf86-input-libinput lxdm ttf-dejavu ttf-liberation firefox  \
+pacman -S --noconfirm sudo git xfce4 xorg-server xf86-input-libinput lxdm ttf-dejavu ttf-liberation firefox  \
       		pulseaudio nm-connection-editor network-manager-applet \
       		xfce4-pulseaudio-plugin \
 		blueman pulseaudio-bluetooth \
@@ -118,31 +119,18 @@ usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill 
 
 git clone https://github.com/SupreethaJayaram/ArchLinux-Build
 cd ArchLinux-Build
+chown -R alarm linux-pine64
 cd linux-pine64
-makepkg -Acs
-echo " linuxpine64 complied succesfully"
-
-
-
-
-
+sudo -u alarm makepkg -s
+ls
+pacman -U *.pkg.tar.*
 
 cd ..
+chown -R alarm uboot-pine64-git
 cd uboot-pine64-git
-makepkg -Acs
-echo " uboot  complied succesfully"
-
-
-
-
-
-
-
-
-
-
-
-
+sudo -u alarm makepkg -s
+ls
+pacman -U *.pkg.tar.*
 
 
 sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
