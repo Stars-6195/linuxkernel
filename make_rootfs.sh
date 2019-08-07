@@ -93,6 +93,10 @@ SigLevel = Never
 Server = https://github.com/anarsoul/PKGBUILDs/releases/download/mainline/
 EOF
 
+cat > "$DEST/etc/sudoers.txt" <<EOF
+alarm ALL=(ALL) NOPASSWD: ALL
+EOF
+
 cat > "$DEST/second-phase" <<EOF
 
 #!/bin/sh
@@ -121,16 +125,16 @@ git clone https://github.com/SupreethaJayaram/ArchLinux-Build
 cd ArchLinux-Build
 chown -R alarm linux-pine64
 cd linux-pine64
-sudo -u alarm makepkg -s
+sudo -u alarm makepkg -si
 ls
-pacman -U *.pkg.tar.*
+#pacman -U *.pkg.tar.*
 
 cd ..
 chown -R alarm uboot-pine64-git
 cd uboot-pine64-git
-sudo -u alarm makepkg -s
+sudo -u alarm makepkg -si
 ls
-pacman -U *.pkg.tar.*
+#pacman -U *.pkg.tar.*
 
 
 sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
