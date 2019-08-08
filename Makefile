@@ -12,3 +12,4 @@ archlinux-xfce-oceanic_5205-$(RELEASE_NAME).img: rootfs-$(RELEASE_NAME).tar.gz
 
 .PHONY: image
 archlinux-xfce-oceanic_5205: archlinux-xfce-oceanic_5205-$(RELEASE_NAME).img
+image: archlinux-xfce-oceanic_5205-$(RELEASE_NAME).img
