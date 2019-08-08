@@ -7,6 +7,7 @@ OTHERDIR="otherfiles"
 DEST="$1"
 OUT_TARBALL="$2"
 BUILD_ARCH=arm64
+USER=`sudo who | head -1 | awk '{print $1}'`
 
 export LC_ALL=C
 
@@ -86,14 +87,8 @@ mv "$DEST/etc/resolv.conf" "$DEST/etc/resolv.conf.dist"
 cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 sed -i 's|CheckSpace|#CheckSpace|' "$DEST/etc/pacman.conf"
 
-
-cat >> "$DEST/etc/pacman.conf" <<EOF
-[pine64-mainline]
-SigLevel = Never
-Server = https://github.com/anarsoul/PKGBUILDs/releases/download/mainline/
-EOF
-
-cat > "$DEST/etc/sudoers.txt" <<EOF
+cat > "$DEST/etc/sudoers" <<EOF
+root ALL=(ALL) ALL
 alarm ALL=(ALL) NOPASSWD: ALL
 EOF
 
@@ -120,21 +115,6 @@ pacman -S --noconfirm sudo git xfce4 xorg-server xf86-input-libinput lxdm ttf-de
 systemctl enable lxdm
 systemctl enable NetworkManager
 usermod -a -G network,video,audio,optical,storage,input,scanner,games,lp,rfkill alarm
-
-git clone https://github.com/SupreethaJayaram/ArchLinux-Build
-cd ArchLinux-Build
-chown -R alarm linux-pine64
-cd linux-pine64
-sudo -u alarm makepkg -si
-ls
-#pacman -U *.pkg.tar.*
-
-cd ..
-chown -R alarm uboot-pine64-git
-cd uboot-pine64-git
-sudo -u alarm makepkg -si
-ls
-#pacman -U *.pkg.tar.*
 
 
 sed -i 's|^#en_US.UTF-8|en_US.UTF-8|' /etc/locale.gen
@@ -168,14 +148,8 @@ cp $OTHERDIR/8723cs.conf $DEST/etc/modprobe.d/
 cp $OTHERDIR/loaders.cache $DEST//usr/lib/gdk-pixbuf-2.0/2.10.0/
 
 echo "Installed rootfs to $DEST"
-
-# Create tarball with BSD tar
-echo -n "Creating tarball ... "
-pushd .
-cd $DEST && tar -zcvf ../$OUT_TARBALL .
-popd
-rm -rf $DEST
-
+echo "Cloning requirements"
+git clone https://github.com/SupreethaJayaram/ArchLinux-Build
+chown -R $USER:$USER ArchLinux-Build
 set -x
 echo "Done"
-
